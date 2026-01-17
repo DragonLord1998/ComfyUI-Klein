@@ -52,8 +52,7 @@ RUN git clone https://github.com/ltdrdata/ComfyUI-Manager.git && \
     git clone https://github.com/Lightricks/ComfyUI-LTXVideo.git
 
 # Install PyTorch and all ComfyUI dependencies
-RUN python3.12 -m pip install --no-cache-dir \
-    torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+RUN python3.12 -m pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu124
 
 WORKDIR /tmp/build/ComfyUI
 RUN python3.12 -m pip install --no-cache-dir -r requirements.txt && \
@@ -62,10 +61,10 @@ RUN python3.12 -m pip install --no-cache-dir -r requirements.txt && \
 # Install custom node dependencies
 WORKDIR /tmp/build/ComfyUI/custom_nodes
 RUN for node_dir in */; do \
-        if [ -f "$node_dir/requirements.txt" ]; then \
-            echo "Installing requirements for $node_dir"; \
-            python3.12 -m pip install --no-cache-dir -r "$node_dir/requirements.txt" || true; \
-        fi; \
+    if [ -f "$node_dir/requirements.txt" ]; then \
+    echo "Installing requirements for $node_dir"; \
+    python3.12 -m pip install --no-cache-dir -r "$node_dir/requirements.txt" || true; \
+    fi; \
     done
 
 # ============================================================================
